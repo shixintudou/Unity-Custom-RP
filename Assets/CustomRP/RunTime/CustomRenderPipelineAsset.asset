@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c16004898bcea7346a8bda5f6dc4a0da, type: 3}
+  m_Name: CustomRenderPipelineAsset
+  m_EditorClassIdentifier: 
+  dynamicBatching: 0
+  instancing: 1
+  SRPBatching: 0
+  shadowSettings:
+    maxDistance: 22.7
+    distanceFade: 0.208
+    directional:
+      atlasSize: 2048
+      cascadeCount: 4
+      cascadeRatio1: 0.179
+      cascadeRatio2: 0.287
+      cascadeRatio3: 0.496
+      cascadeFade: 0.304
+      filter: 2
+      cascadeBlend: 1
