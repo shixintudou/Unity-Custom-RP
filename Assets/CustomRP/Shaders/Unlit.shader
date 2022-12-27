@@ -3,6 +3,7 @@ Shader "CustomSRP/Unlit"
     Properties
     {
         _BaseMap("Texture",2D)="white"{}
+        [HDR]
         _BaseColor("Color",Color)=(1,1,1,1)
         _Cutoff("Alpha Cutoff",Range(0.0,1.0))=0.5
         [Toggle(_CLIPPING)]

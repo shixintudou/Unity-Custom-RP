@@ -66,6 +66,7 @@ float4 LitPassFragment(Varings input): SV_TARGET
     BRDF brdf=GetBRDF(surface);
 #endif
     float3 color=GetLighting(surface,brdf,gi);
+    color+=GetEmission(input.baseUV);
 #if defined(_CLIPPING)
     clip(surface.alpha-GetCutoff(input.baseUV));
 #endif

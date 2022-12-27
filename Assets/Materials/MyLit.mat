@@ -10,7 +10,7 @@ Material:
   m_Name: MyLit
   m_Shader: {fileID: 4800000, guid: 766b10719c6d9ff4e9a2e5ba4ae9467b, type: 3}
   m_ShaderKeywords: _RECEIVE_SHADOWS _SHADOWS_ON
-  m_LightmapFlags: 4
+  m_LightmapFlags: 2
   m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: 2000
@@ -40,7 +40,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _EmissionMap:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 10300, guid: 0000000000000000f000000000000000, type: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:

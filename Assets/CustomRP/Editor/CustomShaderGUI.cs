@@ -63,6 +63,7 @@ public class CustomShaderGUI : ShaderGUI
         EditorGUI.BeginChangeCheck();
         editor = materialEditor;
         this.properties = properties;
+        BakeEmission();
         materials = materialEditor.targets;     
         EditorGUILayout.Space();
         showPresets = EditorGUILayout.Foldout(showPresets, "Presets", true);
@@ -76,6 +77,7 @@ public class CustomShaderGUI : ShaderGUI
         if(EditorGUI.EndChangeCheck())
         {
             SetShadowCasterPass();
+            CopyLighmappingProperties();
         }
     }
     bool SetProperty(string name, float value)
@@ -180,6 +182,35 @@ public class CustomShaderGUI : ShaderGUI
         foreach(Material m in materials)
         {
             m.SetShaderPassEnabled("ShadowCaster", enabled);
+        }
+    }
+    void BakeEmission()
+    {
+        EditorGUI.BeginChangeCheck();
+        editor.LightmapEmissionProperty();
+        if(EditorGUI.EndChangeCheck())
+        {
+            foreach(Material m in editor.targets)
+            {
+                m.globalIlluminationFlags &= ~MaterialGlobalIlluminationFlags.EmissiveIsBlack;
+            }
+        }
+    }
+    void CopyLighmappingProperties()
+    {
+        MaterialProperty mainTex = FindProperty("_MainTex", properties, false);
+        MaterialProperty baseMap = FindProperty("_BaseMap", properties, false);
+        if (mainTex != null && baseMap != null)
+        {
+            mainTex.textureValue = baseMap.textureValue;
+            mainTex.textureScaleAndOffset = baseMap.textureScaleAndOffset;
+        }
+        MaterialProperty color = FindProperty("_Color", properties, false);
+        MaterialProperty baseColor =
+            FindProperty("_BaseColor", properties, false);
+        if (color != null && baseColor != null)
+        {
+            color.colorValue = baseColor.colorValue;
         }
     }
 }
