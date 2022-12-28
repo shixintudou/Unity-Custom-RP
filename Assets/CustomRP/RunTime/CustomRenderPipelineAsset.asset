@@ -16,7 +16,7 @@ MonoBehaviour:
   instancing: 1
   SRPBatching: 0
   shadowSettings:
-    maxDistance: 22.7
+    maxDistance: 17.64
     distanceFade: 0.208
     directional:
       atlasSize: 2048

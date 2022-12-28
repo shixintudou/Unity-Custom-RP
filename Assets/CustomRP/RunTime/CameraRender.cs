@@ -51,7 +51,9 @@ public partial class CameraRender
         {
             enableDynamicBatching = dynamicBatching,
             enableInstancing = instancing,
-            perObjectData = PerObjectData.Lightmaps | PerObjectData.LightProbe | PerObjectData.LightProbeProxyVolume
+            perObjectData = PerObjectData.Lightmaps | PerObjectData.LightProbe |
+            PerObjectData.LightProbeProxyVolume | PerObjectData.ShadowMask |
+            PerObjectData.OcclusionProbe | PerObjectData.OcclusionProbeProxyVolume
         };
         drawing.SetShaderPassName(1, litShaderTagId);
         FilteringSettings filtering = new FilteringSettings(RenderQueueRange.opaque);

@@ -19,10 +19,13 @@ TEXTURE2D(unity_Lightmap);
 SAMPLER(samplerunity_Lightmap);
 TEXTURE3D_FLOAT(unity_ProbeVolumeSH);
 SAMPLER(samplerunity_ProbeVolumeSH);
+TEXTURE2D(unity_ShadowMask);
+SAMPLER(samplerunity_ShadowMask);
 
 struct GI
 {
     float3 diffuse;
+    ShadowMask shadowMask;
 };
 
 float3 SampleLightmap(float2 lightmapUV)
@@ -69,12 +72,42 @@ float3 SampleLightprob(Surface surface)
         }
 	#endif
 }
+float4 SampleBakedShadow(float2 lightmapUV,Surface surface)
+{
+    #if defined(LIGHTMAP_ON)
+        return SAMPLE_TEXTURE2D(unity_ShadowMask,samplerunity_ShadowMask,lightmapUV);
+    #else
+        if (unity_ProbeVolumeParams.x) 
+        {
+			return SampleProbeOcclusion(
+				TEXTURE3D_ARGS(unity_ProbeVolumeSH, samplerunity_ProbeVolumeSH),
+				surface.position, unity_ProbeVolumeWorldToObject,
+				unity_ProbeVolumeParams.y, unity_ProbeVolumeParams.z,
+				unity_ProbeVolumeMin.xyz, unity_ProbeVolumeSizeInv.xyz
+			);
+		}
+        else
+        {
+            return unity_ProbesOcclusion;
+        }
+    #endif
+}
 
 
 GI GetGI(float2 lightmapUV,Surface surface)
 {
     GI gi;
     gi.diffuse=SampleLightmap(lightmapUV)+SampleLightprob(surface);
+    gi.shadowMask.distance=false;
+    gi.shadowMask.always=false;
+    gi.shadowMask.shadows=1.0;
+    #if defined(_SHADOW_MASK_DISTANCE)
+        gi.shadowMask.distance=true;
+        gi.shadowMask.shadows=SampleBakedShadow(lightmapUV,surface);
+    #elif defined(_SHADOW_MASK_ALWAYS)
+        gi.shadowMask.always=true;
+        gi.shadowMask.shadows=SampleBakedShadow(lightmapUV,surface);
+    #endif
     return gi;
 }
 

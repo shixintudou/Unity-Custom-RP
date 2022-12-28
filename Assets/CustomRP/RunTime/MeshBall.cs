@@ -20,6 +20,7 @@ public class MeshBall : MonoBehaviour
 
     Matrix4x4[] matrices = new Matrix4x4[1023];
     Vector4[] baseColors = new Vector4[1023];
+    Vector4[] occlusionProbes = new Vector4[1023];
     float[] cutoffs = new float[1023];
     float[] metallics = new float[1023];
     float[] smoothnesses = new float[1023];
@@ -53,8 +54,9 @@ public class MeshBall : MonoBehaviour
                     posiitons[i] = matrices[i].GetColumn(3);
                 }
                 SphericalHarmonicsL2[] lightProbs = new SphericalHarmonicsL2[1023];
-                LightProbes.CalculateInterpolatedLightAndOcclusionProbes(posiitons, lightProbs, null);
+                LightProbes.CalculateInterpolatedLightAndOcclusionProbes(posiitons, lightProbs, occlusionProbes);
                 block.CopySHCoefficientArraysFrom(lightProbs);
+                block.CopyProbeOcclusionArrayFrom(occlusionProbes);
             }
             
         }
