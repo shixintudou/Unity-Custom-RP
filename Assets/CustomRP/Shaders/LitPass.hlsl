@@ -60,12 +60,14 @@ float4 LitPassFragment(Varings input): SV_TARGET
     surface.viewDirection=normalize(_WorldSpaceCameraPos-input.worldPos);
     surface.depth=-TransformWorldToView(input.worldPos).z;
     surface.dither=InterleavedGradientNoise(input.clipPosition.xy, 0);
-    GI gi=GetGI(GI_FRAGMENT_DATA(input),surface);
+    surface.fresnelStrength=GetFresnel(input.baseUV);
+    
 #if defined(__PREMULTIPLY_ALPHA)
     BRDF brdf=GetBRDF(surface,true);
 #else
     BRDF brdf=GetBRDF(surface);
 #endif
+    GI gi=GetGI(GI_FRAGMENT_DATA(input),surface,brdf);
     float3 color=GetLighting(surface,brdf,gi);
     color+=GetEmission(input.baseUV);
 #if defined(_CLIPPING)

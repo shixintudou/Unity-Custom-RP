@@ -12,6 +12,7 @@ struct Surface
     float3 viewDirection;
     float depth;
     float dither;
+    float fresnelStrength;
 };
 
 

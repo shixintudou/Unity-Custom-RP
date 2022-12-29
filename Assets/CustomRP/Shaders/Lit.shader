@@ -7,6 +7,7 @@ Shader "CustomSRP/Lit"
         _Cutoff("Alpha Cutoff",Range(0.0,1.0))=0.5
         _Metallic("MetalLic",Range(0.0,1.0))=1.0
         _Smoothness("Smoothness",Range(0.0,1.0))=1.0
+        _Fresnel("Fresnel",Range(0.0,1.0))=1.0
         [Toggle(_CLIPPING)]
         _clipping("Alpha Cliping",Float)=0
         [Toggle(_SPREMULTIPLY_ALPHA)]
