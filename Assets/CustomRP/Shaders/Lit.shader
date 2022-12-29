@@ -56,6 +56,7 @@ Shader "CustomSRP/Lit"
             #pragma shader_feature _RECEIVE_SHADOWS
             #pragma multi_compile _ LIGHTMAP_ON
             #pragma multi_compile _ _SHADOW_MASK_DISTANCE _SHADOW_MASK_ALWAYS
+            #pragma multi_compile _ LOD_FADE_CROSSFADE
 
             #include "LitPass.hlsl"
 
@@ -76,6 +77,7 @@ Shader "CustomSRP/Lit"
             #pragma fragment ShadowCasterPassFragment
             #pragma shader_feature _ _SHADOWS_CLIP _SHADOWS_DITHER
             #pragma multi_compile_instancing
+            #pragma multi_compile _ LOD_FADE_CROSSFADE
 
             #include "ShadowCasterPass.hlsl"
 

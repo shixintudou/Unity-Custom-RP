@@ -29,4 +29,12 @@ float SquaredDistance(float3 a,float3 b)
     return dot(a-b,a-b);
 }
 
+void ClipLOD(float2 clipPosition,float fade)
+{
+    #if defined(LOD_FADE_CROSSFADE)
+        float dither=InterleavedGradientNoise(clipPosition, 0);
+        clip(fade+ (fade < 0.0 ? dither : -dither));
+    #endif
+}
+
 #endif

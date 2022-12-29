@@ -17,9 +17,9 @@ public class PerObjectMaterialProperties : MonoBehaviour
     [SerializeField, Range(0f, 1f)]
     float cutoff = 0.5f;
     [SerializeField, Range(0f, 1f)]
-    float metallic = 1.0f;
+    float metallic = 0.0f;
     [SerializeField, Range(0f, 1f)]
-    float smoothness = 1.0f;
+    float smoothness = 0.0f;
     [SerializeField, ColorUsage(false, true)]
     Color emissionColor = Color.black;
 

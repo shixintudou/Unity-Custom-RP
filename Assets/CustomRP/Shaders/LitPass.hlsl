@@ -48,6 +48,7 @@ Varings LitPassVertex(Atrributes input)
 float4 LitPassFragment(Varings input): SV_TARGET
 {
     UNITY_SETUP_INSTANCE_ID(input);
+    ClipLOD(input.clipPosition.xy,unity_LODFade.x);
     float4 base= GetBase(input.baseUV);
     Surface surface;
     surface.position=input.worldPos;
