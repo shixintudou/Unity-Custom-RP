@@ -16,6 +16,7 @@ struct Atrributes
     float3 position:POSITION;
     float2 baseUV:TEXCOORD0;
     float3 objectNormal:NORMAL;
+    float4 tangentOS:TANGENT;
     GI_ATTRIBUTE_DATA
     UNITY_VERTEX_INPUT_INSTANCE_ID
 };
@@ -24,8 +25,14 @@ struct Varings
 {
     float4 clipPosition:SV_POSITION;
     float2 baseUV:VAR_BASE_UV;
+#if defined(_DETAIL_MAP)
+    float2 detailUV:VAR_DETAIL_UV;
+#endif
     float3 worldNormal:VAR_NORMAL;
     float3 worldPos:BAR_POSITION;
+#if defined(_NORMAL_MAP)
+    float4 tangentWS:VAR_TANGENT;
+#endif
     GI_VARYINGS_DATA
     UNITY_VERTEX_INPUT_INSTANCE_ID
 };
@@ -43,24 +50,46 @@ Varings LitPassVertex(Atrributes input)
     output.worldNormal=TransformObjectToWorldNormal(input.objectNormal);
     output.worldPos=TransformObjectToWorld(input.position);
     output.baseUV=TransformBaseUV(input.baseUV);
+#if defined(_DETAIL_MAP)
+    output.detailUV=TransformDetailUV(input.baseUV);
+#endif
+#if defined(_NORMAL_MAP)
+    output.tangentWS=float4(TransformObjectToWorldDir(input.tangentOS.xyz),input.tangentOS.w);
+#endif
     return output;
 }
 float4 LitPassFragment(Varings input): SV_TARGET
 {
     UNITY_SETUP_INSTANCE_ID(input);
     ClipLOD(input.clipPosition.xy,unity_LODFade.x);
-    float4 base= GetBase(input.baseUV);
+    InputConfig config = GetInputConfig(input.baseUV);
+	#if defined(_MASK_MAP)
+		config.useMask = true;
+	#endif
+	#if defined(_DETAIL_MAP)
+		config.detailUV = input.detailUV;
+		config.useDetail = true;
+	#endif
+    float4 base= GetBase(config);
     Surface surface;
     surface.position=input.worldPos;
-    surface.normal=normalize(input.worldNormal);
+#if defined(_NORMAL_MAP)
+    surface.normal=NormalTangentToWorld(GetNormalTS(config),input.worldNormal,input.tangentWS);
+    surface.interpolatedNormal=input.worldNormal;
+#else
+    surface.normal = normalize(input.worldNormal);
+	surface.interpolatedNormal = surface.normal;
+#endif
     surface.color=base.rgb;
     surface.alpha=base.a;
-    surface.metallic=GetMetallic(input.baseUV);
-    surface.smoothness=GetSmoothness(input.baseUV);
+    surface.metallic=GetMetallic(config);
+    surface.smoothness=GetSmoothness(config);
     surface.viewDirection=normalize(_WorldSpaceCameraPos-input.worldPos);
     surface.depth=-TransformWorldToView(input.worldPos).z;
     surface.dither=InterleavedGradientNoise(input.clipPosition.xy, 0);
-    surface.fresnelStrength=GetFresnel(input.baseUV);
+    surface.fresnelStrength=GetFresnel(config);
+    surface.occlusion=GetOcclusion(config);
+    
     
 #if defined(__PREMULTIPLY_ALPHA)
     BRDF brdf=GetBRDF(surface,true);
@@ -69,9 +98,9 @@ float4 LitPassFragment(Varings input): SV_TARGET
 #endif
     GI gi=GetGI(GI_FRAGMENT_DATA(input),surface,brdf);
     float3 color=GetLighting(surface,brdf,gi);
-    color+=GetEmission(input.baseUV);
+    color+=GetEmission(config);
 #if defined(_CLIPPING)
-    clip(surface.alpha-GetCutoff(input.baseUV));
+    clip(surface.alpha-GetCutoff(config));
 #endif
     return float4(color,surface.alpha);
 }

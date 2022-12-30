@@ -38,10 +38,11 @@ Varings ShadowCasterPassVertex(Atrributes input)
 void ShadowCasterPassFragment(Varings input)
 {
     UNITY_SETUP_INSTANCE_ID(input);
-    float4 base= GetBase(input.baseUV);
+    InputConfig config = GetInputConfig(input.baseUV);
+    float4 base= GetBase(config);
     ClipLOD(input.clipPosition.xy,unity_LODFade.x);
 #if defined(_SHADOWS_CLIP)
-    clip(base.a-GetCutoff(input.baseUV));
+    clip(base.a-GetCutoff(config));
 #elif defined(_SHADOW_DITHER)
     float dither = InterleavedGradientNoise(input.clipPosition.xy, 0);
 	clip(base.a - dither);

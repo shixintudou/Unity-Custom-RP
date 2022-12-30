@@ -35,7 +35,7 @@ float3 IndirectBRDF(Surface surface,BRDF brdf,float3 diffuse, float3 specular)
 		Pow4(1.0 - saturate(dot(surface.normal, surface.viewDirection)));
     float3 reflection=specular*lerp(brdf.specular, brdf.fresnel, fresnelStrength);
     reflection/=brdf.roughness*brdf.roughness+1.0;
-    return diffuse*brdf.diffuse+reflection;
+    return (diffuse*brdf.diffuse+reflection)*surface.occlusion;
 }
 BRDF GetBRDF(Surface surface,bool applyAlphaToDiffuse=false)
 {

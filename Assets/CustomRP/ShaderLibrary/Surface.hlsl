@@ -13,6 +13,8 @@ struct Surface
     float depth;
     float dither;
     float fresnelStrength;
+    float occlusion;
+    float3 interpolatedNormal;
 };
 
 
