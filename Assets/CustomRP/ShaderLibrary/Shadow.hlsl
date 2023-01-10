@@ -37,6 +37,11 @@ struct DirectionalShadowData
     float normalBias;
     int shadowMaskChannel;
 };
+struct OtherShadowData
+{
+    float strength;
+    int shadowMaskChannel;
+};
 struct ShadowMask
 {
     bool distance;
@@ -175,11 +180,15 @@ float GetCascadeShadow(DirectionalShadowData directional,ShadowData data,Surface
     }
     return shadow;
 }
+float GetOtherShadow(OtherShadowData other,ShadowData data,Surface surface)
+{
+    return 1.0;
+}
 float GetDirectionalShadowAttenuation(DirectionalShadowData directional,ShadowData data,Surface surface)
 {
-    #if !defined(_RECEIVE_SHADOWS)
-		return 1.0;
-	#endif
+#if !defined(_RECEIVE_SHADOWS)
+	return 1.0;
+#endif
     float shadow;
 	if (directional.strength*data.strength <= 0.0) 
     {
@@ -192,7 +201,19 @@ float GetDirectionalShadowAttenuation(DirectionalShadowData directional,ShadowDa
 	}
 	return shadow;
 }
-
+float GetOtherShadowAttenuation(OtherShadowData otherShadowData,ShadowData shadowData,Surface surface)
+{
+#if !defined(_RECEIVE_SHADOWS)
+    return 1.0;
+#endif
+    float shadow;
+    if(otherShadowData.strength*shadowData.strength<=0)
+        shadow=GetBakedShadow(shadowData.shadowMask,abs(otherShadowData.strength),otherShadowData.shadowMaskChannel);
+    else
+        shadow=GetOtherShadow(otherShadowData,shadowData,surface);
+        shadow=MixBakedAndRealtimeShadow(shadowData,shadow,otherShadowData.strength,otherShadowData.shadowMaskChannel);
+    return shadow;
+}
 
 
 #endif

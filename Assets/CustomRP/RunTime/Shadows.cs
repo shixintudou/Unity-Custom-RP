@@ -93,6 +93,19 @@ public class Shadows
         }
         return new Vector4(0, 0, 0, -1f);
     }
+    public Vector4 ReserveOtherShadows(Light light ,int index)
+    {
+        if(light.shadows!=LightShadows.None&&light.shadowStrength>0)
+        {
+            LightBakingOutput lightBaking = light.bakingOutput;
+            if(lightBaking.lightmapBakeType==LightmapBakeType.Mixed&&lightBaking.mixedLightingMode==MixedLightingMode.Shadowmask)
+            {
+                useShadowMask = true;
+                return new Vector4(light.shadowStrength, 0, 0, lightBaking.occlusionMaskChannel);
+            }
+        }
+        return new Vector4(0, 0, 0, -1f);
+    }
     public void Render()
     {
         if(shadowedDirectionaLightCount>0)

@@ -1,9 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
+
 using UnityEngine;
 using UnityEngine.Rendering;
 
-public class CustomRenderPipeline : RenderPipeline
+public partial class CustomRenderPipeline : RenderPipeline
 {
     CameraRender cameraRender = new CameraRender();
     bool dynamicBatching;
@@ -17,6 +16,7 @@ public class CustomRenderPipeline : RenderPipeline
         this.instancing = instancing;
         GraphicsSettings.lightsUseLinearIntensity = true;
         this.shadowSettings = shadowSettings;
+        InitializeForEditor();
     }
     protected override void Render(ScriptableRenderContext context, Camera[] cameras)
     {
