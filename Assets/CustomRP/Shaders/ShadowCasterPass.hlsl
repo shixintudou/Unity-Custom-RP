@@ -1,6 +1,7 @@
 #ifndef SHADOWCASTERPASS_HLSL
 #define SHADOWCASTERPASS_HLSL
 
+bool _ShadowPancaking;
 
 struct Atrributes
 {
@@ -26,11 +27,15 @@ Varings ShadowCasterPassVertex(Atrributes input)
     float3 worldPos=TransformObjectToWorld(input.position);
     output.clipPosition=TransformWorldToHClip(worldPos);
 
+    if(_ShadowPancaking)
+    {
     #if UNITY_REVERSED_Z
         output.clipPosition.z=min(output.clipPosition.z,output.clipPosition.w*UNITY_NEAR_CLIP_VALUE);
     #else
         output.clipPosition.z=max(output.clipPosition.z,output.clipPosition.w*UNITY_NEAR_CLIP_VALUE);
     #endif
+    }
+    
 
     output.baseUV=TransformBaseUV(input.baseUV);
     return output;
